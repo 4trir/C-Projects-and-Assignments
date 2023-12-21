@@ -1,0 +1,40 @@
+Title
+Gabriel Berta
+CSCI 200 Summer
+SpaceDefenders
+
+Problem Description
+This program creates a game where the user has control over a spaceship and has to destory enemy ships
+while doging shots from the enemies. This program aims to create a simple fun game that is easy to jump
+into but can take a while to get good at. The program also allows the user to slect their difficulty and
+even change the .dat file to customize the game and its difficulty. In the dat file, 1st line - enemySpawnRate, 2nd line - enemyFireRate, 3rd line - mainShipFireRate, 4th line mainShipSpeed.
+
+Program Documentation 
+This program is fairly simply to run! Just launch the executable and click on which difficulty you want. 
+Use WASD or the arrow keys to move your ship and the spacebar to shoot. The program will need to be built using 
+SFML but including the dlls required into the folder with the zip allows for usage without installing SFML. 
+Most elements on screen are using their own class and are going to be expanded on. The enemies class will be 
+expanded and made abstract so that different enemy types can spawn. The current class structure and main structure allows
+for most of the objects on screen to be retexture in case that is required. This entire project is different from my orginal 
+idea. I was getting bored making a calculator and wanted something more interesting to work on.
+
+List Data Structure 
+I used vectors for storage of the pointers to classes for the ships, vectors, lasers, and clocks. I chose vectors for their simplicity of use
+and ability to store a good amount of data members while working best with smaller data. Since there should rarely be a ton of objects at once,
+the vector works good in this case.
+
+Tests
+This program does not allow for many miss inputs. But there are still some issues that have not been fully addressed due to a lack of time. The
+program catches the error but does not exit the program.
+Another test is trying to fly off screen, this is handled by check if the sprite is off the screen and reseting it to the side of the screen where its 
+closest. I tried flying off to the left, right, top, bottom and all corners and could not get it to  fly off.
+Another problem the game catches is shooting too fast. This is handled by setting a timer and checking if enough time has elasped to fire again.
+The biggest "problem" is that users can customize the difficulty. This does not check any values and can make the game behave really unexpected.
+I have intentionally left this as I have always enjoyed messing around with games. The standard values are very close to 1 so resetting is easy.
+Also, if the user clicks an invalid spot to start nothing will happen as the porgram looks specifically for clicks on the text.
+
+Reflections
+This project has increased my knownledge significantly on C++. The biggest learning experince for me was getting more comfotable with points
+and the free store. I was very nervous about using those before this project, but now I am much more comfortable with it. I also got much more comfortable 
+with using classes and pointers to classes. This was also a really good way to work some more with SFML and its usages and libraries. I especially liked the audio librarie.
+I definitely would decide to change my topic before a week prior to the due date. This has made it tricky to get it working right while also working on the other aissignments. 
