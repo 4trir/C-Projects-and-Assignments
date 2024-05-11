@@ -2,7 +2,7 @@ Currently this project is not working due to compatibility issues between SFML a
 
 I am working on a fix hopefully finshed by the end of summer.
 
-
+********************************************************************************************************************************************************************************
 This is Space Defenders, an infinite side scrolling space game, where you pilot a ship and destroy other craft while trying to stay alive. Any features that are not implemented 
 are for future development of the game.
    
