@@ -1,0 +1,176 @@
+% Circular Antenna Array Array Factor Calculation
+clear; clc;
+% User Input
+radius = input('Enter the radius of the array (in centimeters): ');
+operating_frequency = input('Enter the operating frequency (in Hz): ');
+num_elements = input('Enter the number of elements in the array: ');
+element_type = input('Enter the type of antenna element (1 for Isotropic, 2 for Dipole): ');
+theta0 = input('Enter the main beam direction (theta) in degrees: ');
+phi0 = input('Enter the main beam direction (phi) in degrees: ');
+a = radius/100;
+% Convert angles to radians
+theta0 = deg2rad(theta0);
+phi0 = deg2rad(phi0);
+
+% Constants
+lambda = 3e8 / operating_frequency;  % Wavelength in meters
+k = 2 * pi / lambda;  % Wave number
+theta = linspace(0, pi, 360);
+phi = linspace(0, 2*pi, 360);
+
+% Define element pattern (Isotropic or Dipole)
+if element_type == 1
+    % Isotropic pattern: uniform in all directions
+    element_pattern = @(theta, phi) 1;
+elseif element_type == 2
+    % Dipole pattern: sin(theta) for elevation (assuming a simple dipole)
+    element_pattern = @(theta, phi) sin(theta);
+    E_element = element_pattern(theta, phi);
+    E_element = E_element / max(E_element(:));  % Normalize
+
+else
+    error('Invalid element type. Choose 1 for Isotropic or 2 for Dipole.');
+end
+
+
+delta_phi = 2 * pi / num_elements;
+
+AF_sum = 0;
+
+
+
+phi_n = 0;
+
+%xz plane, phi = 0
+for n = 1:num_elements
+    Af_single = exp(1j * k * a * (sin(theta) * cos(0 - phi_n) - sin(theta0) * cos(phi0-phi_n)));
+    phi_n = phi_n + delta_phi;
+    AF_sum = AF_sum + Af_single;
+
+end
+phi_n = 0;
+
+AF = abs(AF_sum) / max(abs(AF_sum)); % Ensure AF is real
+AFdB = 20 * log10(AF);
+AFdB = AFdB - max(AFdB);
+AFdB(AFdB<-40)=-40;
+
+E_total = element_pattern(theta, phi0) .* AF; % Multiply with element pattern
+E_total_norm = E_total / max(E_total(:)); % Normalize
+EdB = 20 * log10(E_total_norm);
+EdB = EdB - max(EdB);
+EdB(EdB<-40) = -40;
+
+figure;
+polarplot(theta, AF, 'b', 'LineWidth', 2); % Use magnitude of AF
+title('Normalized Radiation Pattern in the xz Plane');
+ax = gca;
+ax.ThetaZeroLocation = 'right';
+ax.ThetaDir = 'counterclockwise'; 
+grid on;
+
+figure;
+polarplot(theta, E_total_norm, 'b', 'LineWidth', 2); % Use magnitude of AF
+title('Normalized E Pattern in the xz Plane');
+ax = gca;
+ax.ThetaZeroLocation = 'right';
+ax.ThetaDir = 'counterclockwise'; 
+grid on;
+
+AF_sum = 0;
+
+
+%yz plane phi = 90
+for n = 1:num_elements
+    Af_single = exp(1j * k * a * (sin(theta) * cos(pi/2 - phi_n) - sin(theta0) * cos(phi0-phi_n)));
+    phi_n = phi_n + delta_phi;
+    AF_sum = AF_sum + Af_single;
+
+end
+phi_n = 0;
+
+AF = abs(AF_sum) / max(abs(AF_sum)); % Ensure AF is real
+AFdB = 20 * log10(AF);
+AFdB = AFdB - max(AFdB);
+AFdB(AFdB<-40)=-40;
+
+E_total = element_pattern(theta, phi0) .* AF; % Multiply with element pattern
+E_total_norm = E_total / max(E_total(:)); % Normalize
+EdB = 20 * log10(E_total_norm);
+EdB = EdB - max(EdB);
+EdB(EdB<-40) = -40;
+
+figure;
+polarplot(theta, AF, 'b', 'LineWidth', 2); % Use magnitude of AF
+title('Normalized Radiation Pattern in the yz Plane');
+ax = gca;
+ax.ThetaZeroLocation = 'right';
+ax.ThetaDir = 'counterclockwise'; 
+grid on;
+
+figure;
+polarplot(theta, E_total_norm, 'b', 'LineWidth', 2); % Use magnitude of AF
+title('Normalized E Pattern in the yz Plane');
+ax = gca;
+ax.ThetaZeroLocation = 'right';
+ax.ThetaDir = 'counterclockwise'; 
+grid on;
+
+AF_sum = 0;
+
+
+
+
+
+% xy plane theta = 90
+for i = 1:num_elements
+    Af_single = exp(1j * k * a * (sin(pi/2) * cos(phi - phi_n) - sin(theta0) * cos(phi0-phi_n)));
+    phi_n = phi_n + delta_phi;
+    AF_sum = AF_sum + Af_single;
+
+end
+phi_n = 0;
+
+AF = abs(AF_sum) / max(abs(AF_sum)); % Ensure AF is real
+AFdB = 20 * log10(AF);
+AFdB = AFdB - max(AFdB);
+AFdB(AFdB<-40)=-40;
+
+E_total = element_pattern(theta, phi0) .* AF; % Multiply with element pattern
+E_total_norm = E_total / max(E_total(:)); % Normalize
+EdB = 20 * log10(E_total_norm);
+EdB = EdB - max(EdB);
+EdB(EdB<-40) = -40;
+
+
+figure;
+polarplot(phi, AF, 'b', 'LineWidth', 2); % Use magnitude of AF
+title('Normalized AF Pattern in the xy Plane (dB)');
+ax = gca;
+ax.ThetaZeroLocation = 'right';
+ax.ThetaDir = 'counterclockwise'; 
+grid on;
+
+figure;
+polarplot(phi, E_total_norm, 'b', 'LineWidth', 2); % Use magnitude of AF
+title('Normalized E Pattern in the xy Plane');
+ax = gca;
+ax.ThetaZeroLocation = 'right';
+ax.ThetaDir = 'counterclockwise'; 
+grid on;
+
+AF_sum = 0;
+% 
+% figure;
+% polarplot(theta, element_pattern(theta, 0));
+% title('Azimuth Plane (phi = 0)');
+% 
+% figure;
+% polarplot(phi, element_pattern(pi/2, phi));
+% title('Elevation Plane (theta = pi/2)');
+% 
+% figure;
+% % Use constant theta = pi/2 for horizontal plane
+% r = element_pattern(pi/2, phi);  % Pattern at theta = pi/2
+% polarplot(phi, r);
+% title('XY Plane (theta = pi/2)');
